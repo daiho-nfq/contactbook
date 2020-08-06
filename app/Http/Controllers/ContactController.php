@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Contact;
+use App\User;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
@@ -13,6 +14,11 @@ use Illuminate\View\View;
 
 class ContactController extends Controller
 {
+
+    public function getCurrentUser()
+    {
+        return User::findOrFail(Auth::user()->id);
+    }
     /**
      * Display a listing of the resource.
      *
@@ -20,9 +26,7 @@ class ContactController extends Controller
      */
     public function index()
     {
-        $contacts = Contact::all()->where('deleted_at', null)->where('user_id', Auth::user()->id);
-
-        return view('home', compact('contacts'));
+        return view('home', ['contacts' => $this->getCurrentUser()->contacts]);
     }
 
     /**
@@ -50,13 +54,12 @@ class ContactController extends Controller
             'address' => 'required|string|max:50'
         ]);
 
-        Contact::create([
+        $this->getCurrentUser()->contacts()->save(new Contact([
             'name' => $contact['name'],
             'email' => $contact['email'],
             'phone' => $contact['phone'],
             'address' => $contact['address'],
-            'user_id' => Auth::user()->id,
-        ]);
+        ]));
 
         return redirect('/home')->with('success','Contact has been successfully created');
     }
@@ -75,13 +78,11 @@ class ContactController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param Contact $id
      * @return Application|Factory|View
      */
-    public function edit($id)
+    public function edit(Contact $contact)
     {
-        $contact = Contact::findOrFail($id);
-
         return view('contacts.update', compact('contact'));
     }
 

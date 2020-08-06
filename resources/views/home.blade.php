@@ -30,7 +30,7 @@
                                     <td>Email</td>
                                     <td>Phone</td>
                                     <td>Address</td>
-                                    <td colspan="2">Action</td>
+                                    <td>Action</td>
                                 </tr>
                             </thead>
                             <tbody>
@@ -42,10 +42,8 @@
                                         <td>{{$contact->phone}}</td>
                                         <td>{{$contact->address}}</td>
                                         <td>
-                                            <a href="{{route('contacts.edit', $contact->id)}}" class="btn btn-primary">Edit</a>
-                                        </td>
-                                        <td>
-                                            <form action="{{route('contacts.destroy', $contact->id)}}" method="post">
+                                            <a href="{{route('contacts.edit', $contact->id)}}" class="btn btn-primary float-left">Edit</a>
+                                            <form action="{{route('contacts.destroy', $contact->id)}}" method="post" class="float-left ml-3">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button class="btn btn-danger" type="submit">Delete</button>
