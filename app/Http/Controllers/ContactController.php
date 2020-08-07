@@ -61,18 +61,18 @@ class ContactController extends Controller
             'address' => $contact['address'],
         ]));
 
-        return redirect('/home')->with('success','Contact has been successfully created');
+        return redirect('/home')->with('msg','Contact has been successfully created');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+//    /**
+//     * Display the specified resource.
+//     *
+//     * @param  int  $id
+//     * @return \Illuminate\Http\Response
+//     */
     public function show($id)
     {
-        //
+
     }
 
     /**
@@ -104,7 +104,10 @@ class ContactController extends Controller
 
         Contact::whereId($id)->update($contact);
 
-        return redirect('/home')->with('success','Contact has been successfully updated');
+        return redirect('/home')->with([
+            'msg' => 'Contact has been successfully updated',
+            'type' => 'success'
+        ]);
 
     }
 
@@ -119,7 +122,20 @@ class ContactController extends Controller
         $contact = Contact::findOrFail($id);
         $contact->delete();
 
-        return redirect('/home')->with('success','Contact has been successfully deleted');
+        return redirect('/home')->with([
+            'msg' => 'Contact has been successfully deleted',
+            'type' => 'danger',
+            'id' => $id
+        ]);
+    }
 
+    public function restore($id)
+    {
+        Contact::withTrashed()->find($id)->restore();
+
+        return redirect('/home')->with([
+            'msg' => 'Contact has been successfully restored',
+            'type' => 'success'
+        ]);
     }
 }

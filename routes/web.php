@@ -21,4 +21,6 @@ Auth::routes();
 
 Route::get('/home', 'ContactController@index')->name('home');
 
+Route::post('/contacts/restore/{contact}', 'ContactController@restore')->name('contacts.restore');
+
 Route::resource('contacts', 'ContactController');
